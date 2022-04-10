@@ -11,20 +11,24 @@
 #' 
 #data <- read.csv("clim.txt", )
 library(tidyverse)
-data <- read.table("clim.txt", sep = " ",header = T)
+data <- read.table("clim.txt", sep = " ", header = T)
+
+
 colnames(data)
 unique(data$year)
-
+class(data)
 
 aanomaly = function(data, daily = FALSE, crop) {
-  yield_anomaly = list()
+  yield_anomaly = data.frame(1989:2010, NA)
+  colnames(yield_anomaly) = c("year", "anomaly")
   
   if (daily == TRUE) {
     grouped_data <- data %>% 
-      group_by(month, year) %>% 
-      summarize(mean_tmin = mean(tmin_c),
-                mean_tmax = mean(tmax_c),
-                mean_precip = mean(precip))
+      filter(year != 1988) %>% 
+      group_by(year, month) %>% 
+      summarize(tmin = min(tmin_c),
+                tmax = min(tmax_c),
+                total_precip = sum(precip))
   }
   else (grouped_data <- data)
   
@@ -45,14 +49,9 @@ aanomaly = function(data, daily = FALSE, crop) {
 #    yield_anomaly <- (2.65 * grouped_data$mean_tmin[grouped_data$month == 4])
   }
   else if (crop == "almonds") {
-    for (i in seq.int(from = min(unique(grouped_data$year)), to = max(unique(grouped_data$year)), by = 1)) {
+    for (i in seq.int(from = min(yield_anomaly$year), to = max(yield_anomaly$year), by = 1)) {
     
-    yield_anomaly[i] <- ((-0.015 * grouped_data$mean_tmin[grouped_data$month == 2 & grouped_data$year[i]]) - 
-      (0.0046 * grouped_data$mean_tmin[grouped_data$month == 2 & grouped_data$year == [i]] * grouped_data$mean_tmin[grouped_data$month == 2 & grouped_data$year == [i]]) -
-      (0.07 * grouped_data$mean_precip[grouped_data$month == 1 & grouped_data$year == [i]]) +
-      (0.0043 * grouped_data$mean_precip[grouped_data$month == 1 & grouped_data$year == [i]] * grouped_data$mean_precip[grouped_data$month == 1 & grouped_data$year == [i]]) +
-      0.28
-      )
+    yield_anomaly$anomaly[yield_anomaly$year == i] <- ((-0.015 * grouped_data$tmin[grouped_data$month == 2 & grouped_data$year == i]) - (0.0046 * grouped_data$tmin[grouped_data$month == 2 & grouped_data$year == i] * grouped_data$tmin[grouped_data$month == 2 & grouped_data$year == i]) - (0.07 * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i]) + (0.0043 * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i] * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i]) + 0.28)
     print(paste0("yield anomaly for ", i, " is ", yield_anomaly[i]))
     }
   }
@@ -79,10 +78,7 @@ aanomaly = function(data, daily = FALSE, crop) {
 aanomaly(data = data, daily = TRUE, crop = "almonds")
 
 
-
-
-
-
+#seq_along(yield_anomaly$year)
 
 
 
@@ -91,11 +87,16 @@ aanomaly(data = data, daily = TRUE, crop = "almonds")
 
 
 # test group data
-grouped_data_test <- data %>% 
-  group_by(month, year) %>% 
-  summarize(mean_tmin = mean(tmin_c),
-            mean_tmax = mean(tmax_c),
-            mean_precip = mean(precip))
+grouped_data <- data %>% 
+  filter(year != 1988) %>% 
+  group_by(year, month) %>% 
+  summarize(tmin = min(tmin_c),
+            tmax = min(tmax_c),
+            total_precip = sum(precip))
+
+unique(grouped_data$year)
+
+
 
 
 
@@ -117,6 +118,7 @@ for (i in 1:12) {
               mean_precip = mean(data$precip[data$month == i]))
   
 }
+
 
 
 # checking grouping
