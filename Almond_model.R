@@ -23,13 +23,13 @@ aanomaly = function(data, daily = FALSE, crop) {
     stop("Invalid crop. Crop must be one of: wine grapes, almonds, table grapes, oranges, walnuts, avocados.")
   }
   else if (crop = "wine grapes") {
-    
+    data$yield_anomaly <- (2.65 * data$month_tmin_c[month == 4]) - (0.17 * data$month_tmin_c[month == 4] *)
   }
   else if (crop = "almonds") {
-    
+    data$yield_anomaly <-
   }
   else if (crop = "table grapes") {
-    
+    data$yield_anomaly <-
   }
   else if (crop = "oranges") {
     
