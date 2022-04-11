@@ -7,20 +7,25 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
 ```
 
 # Almond Anomaly Summary
 
 ### Data and model sourced from [Lobell et all. 2006](https://naomitague.github.io/ESM232_course/assignments/lobell.2006.pdf) 
 
-Read in the almond yield data:
 ```{r}
-library(tidyverse)
-library(gt)
-
+# read in the climate data:
 data <- read.table("clim.txt", sep = " ", header = T)
 ```
 
+```{r}
+# load in almond anomaly function
+source(here("almond_only_juliet.R"))
+```
+
+# you should be able to delete this code chunk now Juliet! (I loaded/sourced function above)
 ```{r, eval = TRUE, include = FALSE}
 # create function, with parameters as defaults and data to be entered by the user, with no default data
 almond_anomaly = function(data, 
@@ -68,6 +73,8 @@ almond_anom <- almond_anomaly(data = data)
 ```
 
 ```{r}
+library(gt)
+
 almond_anom_table <- almond_anom %>% 
   gt() %>%
   tab_header(
