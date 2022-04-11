@@ -5,7 +5,7 @@ options(scipen = 999)
 data <- read.table("clim.txt", sep = " ", header = T)
 
 # create function, with parameters as defaults and data to be entered by the user, with no default data
-aanomaly = function(data, 
+almond_anomaly = function(data, 
                     temp_param_1 = -0.015, 
                     temp_param_2 = 0.0046, 
                     precip_param_1 = 0.07, 
@@ -43,6 +43,6 @@ aanomaly = function(data,
   return(yield_anomaly)
 }  
 
-aanomaly(data = data)
+almond_anomaly(data = data)
 
 

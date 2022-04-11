@@ -1,0 +1,148 @@
+---
+title: "EDS 230 / ESM 232 Assignment - Almond Anomaly Summary"
+author: "Juliet Cohen, Sydney Rilum, Shale Hunter"
+date: "4/10/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Almond Anomaly Summary
+
+### Data and model sourced from [Lobell et all. 2006](https://naomitague.github.io/ESM232_course/assignments/lobell.2006.pdf) 
+
+Read in the almond yield data:
+```{r}
+library(tidyverse)
+library(gt)
+
+data <- read.table("clim.txt", sep = " ", header = T)
+```
+
+```{r, eval = TRUE, include = FALSE}
+# create function, with parameters as defaults and data to be entered by the user, with no default data
+almond_anomaly = function(data, 
+                    temp_param_1 = -0.015, 
+                    temp_param_2 = 0.0046, 
+                    precip_param_1 = 0.07, 
+                    precip_param_2 = 0.0043,
+                    constant = 0.28) {
+  # wrangle data to reference summary statistics, such as the minimum temperatures of all Februarys
+  grouped_data <- data %>% 
+    # remove 1988 for the almond anomaly calculation, which requires January and February data that is not present for 1988
+    filter(year != 1988) %>% 
+    # group by month and year to compare temperature and precipitation for the same months over many years
+    group_by(year, month) %>% 
+    summarize(tmin = min(tmin_c),
+              tmax = min(tmax_c),
+              total_precip = sum(precip))
+  print("The data is now wrangled. Starting anomaly calculation.")
+  # create empty dataframe which will hold the output yield anoomaly
+  yield_anomaly = data_frame()
+  # iterate the model over all years 
+  for (i in seq.int(from = min(grouped_data$year), to = max(grouped_data$year), by = 1)) {
+    # calculate the almond anomaly for each year from the equation provided from Lobell et al. 2006
+    yield_i <- ((temp_param_1 * grouped_data$tmin[grouped_data$month == 2 & grouped_data$year == i]) 
+                - (temp_param_2 * grouped_data$tmin[grouped_data$month == 2 & grouped_data$year == i]**2) 
+                - (precip_param_1 * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i]) 
+                + (precip_param_2 * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i] 
+                   * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i]) 
+                + constant)
+    # create a list from the year and the yield for that year
+    row = c(i, yield_i)
+    # append the list as a row in the dataframe `yield anomaly`
+    yield_anomaly = rbind(yield_anomaly, row)
+  }
+  # assign column names
+  colnames(yield_anomaly) = c("year", "almond_anomaly")
+  # print the daatframe created from all years' almond anomalies
+  return(yield_anomaly)
+}  
+```
+
+Run function `almond_anomaly()` on the data:
+```{r}
+almond_anom <- almond_anomaly(data = data)
+```
+
+```{r}
+almond_anom_table <- almond_anom %>% 
+  gt() %>%
+  tab_header(
+    title = md("**Almond Anomalies 1989 - 2010**")
+  ) %>%
+  fmt_passthrough(
+  columns = c(year)
+  ) %>%
+  fmt_number(
+  columns = c(almond_anomaly)
+  ) %>%
+  cols_label(year = "Year" , 
+           almond_anomaly = "Almond Anomaly") %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "deepskyblue"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = c(year, almond_anomaly))
+  ) %>%
+tab_style(
+  style = list(
+    cell_fill(color = "coral2"),
+    cell_text(weight = "bold")
+    ),
+  locations = cells_body(
+    columns = c(year, almond_anomaly),
+    rows = year == "1995")
+ ) %>%
+  tab_source_note(source_note = "Data Source: Lobell et all. 2006: https://naomitague.github.io/ESM232_course/assignments/lobell.2006.pdf") %>%
+  opt_align_table_header(align = "center") %>% 
+  cols_width(
+    year ~ px(150),
+    almond_anomaly ~ px(150)
+  ) %>% 
+  cols_align(align = "center")
+
+almond_anom_table
+```
+
+```{r}
+ggplot(data = almond_anom, aes(x = year, y = almond_anomaly)) +
+  geom_line() +
+  theme_classic() +
+  ggtitle("Almond Yield Anomaly, 1989-2010") +
+   xlab("Year") + 
+   ylab("Almond Anomaly (units = ?)") +
+   theme(axis.title.x = element_text(color = "black", size = 11, face = "bold"),
+         axis.text.x = element_text(face = "bold", color = "black", size = 10, angle = 25),
+         axis.title.y = element_text(color = "black", size = 11, face = "bold"),
+         axis.text.y = element_text(face = "bold", color = "black", size = 10),
+         plot.title = element_text(color="black", size = 15, face = "bold"),
+         panel.border = element_rect(colour = "black", fill = NA, size = 2)) +
+  scale_x_continuous(breaks = seq(1989, 2010, by = 1)) +
+  geom_vline(xintercept = 1995,
+              size = 0.3,
+             color = "firebrick",
+             linetype = "dotdash") +
+   geom_text(aes(x = 1995,
+                 label = "largest almond anomaly", 
+                 y = 340), 
+             angle = 90, 
+             vjust = 1.3, 
+             size = 3,
+             color = "firebrick")
+```
+
+
+
+
+
+
+
+
+
+
+
