@@ -46,8 +46,7 @@ almond_anomaly = function(data,
     yield_i <- ((temp_param_1 * grouped_data$tmin[grouped_data$month == 2 & grouped_data$year == i]) 
                 - (temp_param_2 * grouped_data$tmin[grouped_data$month == 2 & grouped_data$year == i]**2) 
                 - (precip_param_1 * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i]) 
-                + (precip_param_2 * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i] 
-                   * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i]) 
+                + (precip_param_2 * grouped_data$total_precip[grouped_data$month == 1 & grouped_data$year == i]**2) 
                 + constant)
     
     # create a list from the year and the yield for that year

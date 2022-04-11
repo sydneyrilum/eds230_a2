@@ -27,7 +27,8 @@ source(here("almond_anomaly.R"))
 almond_anom <- almond_anomaly(data = data)
 ```
 
-# Summarize Results
+# Visually Summarize Results
+
 ```{r}
 library(gt)
 
@@ -100,6 +101,10 @@ ggplot(data = almond_anom, aes(x = year, y = almond_anomaly)) +
 ```
 
 # Almond Anomaly Summary
+
+The calculated anomaly for almond yield between 1989-2010 is displayed above in both table and graph form. The graph highlights an interesting pattern of productions spikes against an otherwise relatively constant rate: 2005, 2008, and most notably 1995 show substantial increases of almond yield; these years may act as starting points for future research into the factors that effect almond production (increased precipitation? new agricultural technology? decrease in pest population?).
+
+When trying to understand these results, there is another consideration that is highlighted better in the table: every value except for 2003-04 is a positive value. This is a potential area for concern because the nominal calculation we are making here is anomaly, or deviation from the mean. But what mean? According to the caption for Figure 3 in [Lobell et al. 2006](https://naomitague.github.io/ESM232_course/assignments/lobell.2006.pdf), it is percent anomaly from 2000-2003 average yields. Interestingly, in our dataset this 2000-04 average looks more like a floor than a mean (particularly using the graph above). Writing as three people with very limited historical knowledge of the details of almond production, we are concerned that this may give a biased number for what constitutes a 'reasonable' amount of almond production. This is particularly important taken in the context of Lobell's work, which looks at forecasting effects of climate change on agricultural production: if the 2000-03 average yields are interpreted as a true average, then it would be expected that many years would fall below that value without any cause for concern. However, if that number is closer to a minimum expected yield (as the graph above seems to indicate), then any substantial or prolonged drop below the threshold should be much more concerning. 
 
 
 
