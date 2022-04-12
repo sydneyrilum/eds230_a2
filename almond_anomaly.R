@@ -26,7 +26,7 @@ almond_anomaly = function(data,
   
   # wrangle data to reference summary statistics, such as the minimum temperature in the month of February each year
   grouped_data <- data %>% 
-    # remove 1988 for the almond anomaly calculation, which requires January and February data that is not present for 1988
+    # remove 1988 for the almond anomaly calculation, which requires January and February data that is not present in this dataset for 1988
     filter(year != 1988) %>% 
     # group by month and year to compare temperature and precipitation for the same months over many years
     group_by(year, month) %>% 
