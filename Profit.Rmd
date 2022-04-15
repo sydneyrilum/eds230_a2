@@ -1,0 +1,69 @@
+---
+title: "Profit"
+author: "Juliet, Shale, Sydney"
+date: '2022-04-15'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(gt)
+```
+
+Sensitivity Analysis
+- at least 2 parameters: price, acres
+
+```{r}
+# read in the climate data
+data <- read.table("clim.txt", sep = " ", header = T)
+
+# load in almond_anomaly.R function
+source(here("almond_anomaly.R"))
+source(here("profit.R"))
+
+almond_anom <- almond_anomaly(data = data)
+almond_anom
+
+total_profit <- profit(almond_anom = almond_anom, acres = 5)
+total_profit
+```
+
+# vary price and discount
+
+```{r}
+# generate samples for both parameters
+n_samples = 220
+
+deviation_price = 0.15 # 15 cents
+base_price = 2.00
+price = runif(min = base_price - deviation_price * base_price,
+              max = base_price + deviation_price * base_price, 
+              n = n_samples)
+
+deviation_discount = 0.02
+base_discount = 0.12
+discount = runif(min = base_discount - deviation_discount * base_discount,
+              max = base_discount + deviation_discount * base_discount, 
+              n = n_samples)
+
+parameters = cbind.data.frame(price, discount)
+
+results = parameters %>% 
+  pmap(~profit(almond_anom = almond_anom,
+               acres = 6, 
+               price = price,
+               discount = discount))
+
+results[[1]]
+```
+
+# Graph
+
+```{r}
+ggplot()
+```
+
+
+
