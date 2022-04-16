@@ -29,9 +29,10 @@ profit <- function(almond_anom, acres, price = 2.00, discount = 0.12) {
   profit = value / (1 + discount)**year
   
   # calculate total profit for all years
-  #total_profit <- sum(profit)
+  tot_profit <- sum(profit)
   
-  return(profit)
+ # return(profit)
+  return(tot_profit)
 }
 
 

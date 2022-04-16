@@ -42,7 +42,7 @@ price = runif(min = base_price - deviation_price * base_price,
               max = base_price + deviation_price * base_price, 
               n = n_samples)
 
-deviation_discount = 0.02
+deviation_discount = 0.02 # 2%
 base_discount = 0.12
 discount = runif(min = base_discount - deviation_discount * base_discount,
               max = base_discount + deviation_discount * base_discount, 
@@ -51,18 +51,23 @@ discount = runif(min = base_discount - deviation_discount * base_discount,
 parameters = cbind.data.frame(price, discount)
 
 results = parameters %>% 
-  pmap(~profit(almond_anom = almond_anom,
+  pmap_dbl(profit(almond_anom = almond_anom,
                acres = 6, 
                price = price,
                discount = discount))
 
 results[[1]]
+
+#df_mean = map_df(results, `[`, c("mean"))
+
+df_mean = cbind(results, parameters)
 ```
 
 # Graph
 
 ```{r}
-ggplot()
+ggplot(data = results, aes(x = discount, y = almond_anom)) + 
+  geom_point() + labs(title = "Effect of Discount Rate on Almond Profits", x = "Discount Rate (%)", y = "Profits ($)")
 ```
 
 
