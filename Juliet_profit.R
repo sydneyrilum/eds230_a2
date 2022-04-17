@@ -15,29 +15,47 @@
 #' @examples
 #' 
 
-# define the function arguments, setting default values for `price` and `discout` 
+# define the function arguments, setting default values for `price` and `discount` 
 profit <- function(df, acres, price = 2.00, discount = 0.12) {
- 
+  
   # pull data from the columns in the dataframe output from almond_anomaly function, called 'almond_anom', or from a user's almond anomaly dataframe with the same column names
   year = (seq_along(df$year))
+  time = (year - year[1])
   yield = (df$almond_anomaly)
   
   # calculate value as a vector 
   value = price*yield*acres
   
   # net present value: account for discount rate with inflation
-  profit = value / (1 + discount)**year
+  df$profit = value / (1 + discount)**time
+  # profit is a list of 22 values, representing the profit for each year
   
   # calculate total profit for all years
-  tot_profit <- sum(profit)
+  #tot_profit <- sum(profit)
   
- # return(profit)
-  return(tot_profit)
+  #return(profit)
+  #return(tot_profit)
+  return(list(year_profit_df = df[, c("year","profit")]))
 }
 
 
 
-
+# test function 
+# df = almond_anom
+# acres = 5
+# price = 2.00
+# discount = 0.12
+# 
+# year = (seq_along(df$year))
+# time = (year - year[1])
+# yield = (df$almond_anomaly)
+# 
+# # calculate value as a vector 
+# value = price*yield*acres
+# 
+# # net present value: account for discount rate with inflation
+# profit = value / (1 + discount)**time
+# 
 
 
 

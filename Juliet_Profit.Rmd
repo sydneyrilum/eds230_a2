@@ -1,15 +1,14 @@
 ---
-title: "Profit"
-author: "Juliet, Shale, Sydney"
-date: '2022-04-15'
-output: pdf_document
+title: "Juliet_Profit"
+author: "Juliet"
+date: '2022-04-17'
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
-library(gt)
 ```
 
 ## Sensitivity Analysis
@@ -22,20 +21,27 @@ data <- read.table("clim.txt", sep = " ", header = T)
 
 # load in almond_anomaly.R function
 source(here("almond_anomaly.R"))
-source(here("profit.R"))
+source(here("Juliet_profit.R"))
 
 almond_anom <- almond_anomaly(data = data)
-almond_anom
+#almond_anom
 
-total_profit <- profit(df = almond_anom, acres = 5)
-total_profit
+profit <- profit(df = almond_anom, acres = 5)
+profit
+profit[[1]]
+# both profit and profit[[1]] return visually the same thing 
+
+# convert list of annual profit values into a df with the respective year
+#years = almond_anom$year
+#year_profit_df = cbind.data.frame(years, profit)
+#year_profit_df
 ```
 
 # Vary the parameters `price` and `discount`
 
 ```{r}
 # generate samples for both parameters
-n_samples = 220
+n_samples = 220 # chose a number that is divisible by 11
 
 deviation_price = 0.15 # 15% deviation, because this value is multiplied by base_price, resulting in a $0.30 deviation
 base_price = 2.00 # the base price value for almonds, this value will increase & decrease by 15% in the distribution
@@ -49,20 +55,38 @@ discount = runif(min = base_discount - deviation_discount * base_discount,
               max = base_discount + deviation_discount * base_discount, 
               n = n_samples)
 
-# bind the sensitivity analysis distributions for `price` and `discount` into one dataframe, with each variable as a column
 parameters = cbind.data.frame(price, discount)
 
+# results = running the function profit() on the parameter distributions we created, and using the almond_anom df and 5 for acres
+# first remind R that the function needs to be sourced
+source(here("Juliet_profit.R"))
+
 results = parameters %>% 
-  pmap_dbl(profit(df = almond_anom,
-               acres = 6, 
-               price = price,
-               discount = discount))
+  pmap(~profit(df = almond_anom, acres = 5))
 
-results[[1]]
+# now we can extract results from the list as above, subset with `[`
+profit_list = map_df(results,`[`, c("profit")) 
 
-#df_mean = map_df(results, `[`, c("mean"))
+# and we can add the parameter values for each run
+profit_df = cbind.data.frame(profit_list, parameters)
+```
 
-df_mean = cbind(results, parameters)
+```{r}
+# plot - pick one of the 2 parameter as a color
+
+p1 = ggplot(profit_df, aes(price, mean, col = discount)) + geom_point(cex = 2)+
+  labs(y="y", 
+       x="x")
+
+p2 = ggplot(profit_df, aes(discount, mean, col = price)) + geom_point(cex = 2)+
+  labs(y="y",
+       x="x")
+
+ggarrange(p1,p2)
+
+
+
+
 ```
 
 # Graph
@@ -71,6 +95,7 @@ df_mean = cbind(results, parameters)
 ggplot(data = results, aes(x = discount, y = almond_anom)) + 
   geom_point() + labs(title = "Effect of Discount Rate on Almond Profits", x = "Discount Rate (%)", y = "Profits ($)")
 ```
+
 
 
 
