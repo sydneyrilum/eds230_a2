@@ -61,39 +61,51 @@ parameters = cbind.data.frame(price, discount)
 # first remind R that the function needs to be sourced
 source(here("Juliet_profit.R"))
 
-results = parameters %>% 
-  pmap(~profit(df = almond_anom, acres = 5))
+#results = parameters %>% 
+#  pmap(~profit(df = almond_anom, acres = 5))
+
+results = parameters %>% pmap(profit, df = almond_anom, acres = 5)
+
+results[[1]]
+
+length(results)
 
 # now we can extract results from the list as above, subset with `[`
-profit_list = map_df(results,`[`, c("profit")) 
+annual_profit = map_df(results,`[`, c("sum")) 
 
 # and we can add the parameter values for each run
-profit_df = cbind.data.frame(profit_list, parameters)
+annual_profit_df = cbind.data.frame(annual_profit, parameters)
 ```
+
+```{r}
+ggplot(data = annual_profit_df, aes(x = price, y = sum)) +
+  geom_point()
+
+ggplot(data = annual_profit_df, aes(x = discount, y = sum)) +
+  geom_point()
+```
+
+
 
 ```{r}
 # plot - pick one of the 2 parameter as a color
 
-p1 = ggplot(profit_df, aes(price, mean, col = discount)) + geom_point(cex = 2)+
-  labs(y="y", 
-       x="x")
-
-p2 = ggplot(profit_df, aes(discount, mean, col = price)) + geom_point(cex = 2)+
-  labs(y="y",
-       x="x")
-
-ggarrange(p1,p2)
-
-
-
-
+# p1 = ggplot(annual_profit_df, aes(profit, sum, col = discount)) + geom_point(cex = 2)+
+#   labs(y="y", 
+#        x="x")
+# 
+# p2 = ggplot(profit_df, aes(discount, mean, col = price)) + geom_point(cex = 2)+
+#   labs(y="y",
+#        x="x")
+# 
+# ggarrange(p1,p2)
 ```
 
 # Graph
 
 ```{r}
-ggplot(data = results, aes(x = discount, y = almond_anom)) + 
-  geom_point() + labs(title = "Effect of Discount Rate on Almond Profits", x = "Discount Rate (%)", y = "Profits ($)")
+# ggplot(data = results, aes(x = discount, y = almond_anom)) + 
+#   geom_point() + labs(title = "Effect of Discount Rate on Almond Profits", x = "Discount Rate (%)", y = "Profits ($)")
 ```
 
 

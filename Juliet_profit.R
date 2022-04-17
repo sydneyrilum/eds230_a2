@@ -35,7 +35,7 @@ profit <- function(df, acres, price = 2.00, discount = 0.12) {
   
   #return(profit)
   #return(tot_profit)
-  return(list(year_profit_df = df[, c("year","profit")]))
+  return(list(year_profit_df = df[, c("year","profit")], sum = sum(df$profit)))
 }
 
 
