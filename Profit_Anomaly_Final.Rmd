@@ -53,7 +53,7 @@ parameters = cbind.data.frame(price, discount)
 
 # results = running the function profit() on the parameter distributions we created, and using the almond_anom df and 5 for acres
 # first remind R that the function needs to be sourced
-source(here("Juliet_profit.R"))
+source(here("Profit.R"))
 
 #results = parameters %>% 
 #  pmap(~profit(df = almond_anom, acres = 5))
