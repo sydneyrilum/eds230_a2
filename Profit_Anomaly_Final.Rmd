@@ -1,6 +1,6 @@
 ---
-title: "Juliet_Profit"
-author: "Juliet"
+title: "Informal Sensitivity Analysis, Almond Profit"
+author: "Juliet, Shale, & Sydney"
 date: '2022-04-17'
 output: html_document
 ---
@@ -23,9 +23,10 @@ data <- read.table("clim.txt", sep = " ", header = T)
 source(here("almond_anomaly.R"))
 source(here("Profit.R"))
 
+# calculate almond yield anomaly
 almond_anom <- almond_anomaly(data = data)
-#almond_anom
 
+# simple profit calculation based on almond anomaly
 profit <- profit(df = almond_anom, acres = 5)
 
 profit[[1]]
@@ -34,16 +35,16 @@ profit[[1]]
 #### Vary the parameters `price` and `discount`
 
 ```{r}
-# generate samples for both parameters
-n_samples = 220 # chose a number that is divisible by 22
+# number of samples to generate for both parameters
+n_samples = 300
 
-deviation_price = 0.15 # $0.15 deviation
-base_price = 2.00 # the base price value for almonds, this value will increase & decrease by 15% in the distribution
+deviation_price = 0.15 # $0.15 deviation in price
+base_price = 2.00 # the base price value for almonds, this value will increase & decrease by 15 cents in the sensitivity analysis distribution
 price = runif(min = base_price - deviation_price,
               max = base_price + deviation_price, 
               n = n_samples)
 
-deviation_discount = 0.02 # 2% discount rate
+deviation_discount = 0.02 # 2% deviation in discount rate
 base_discount = 0.12 # the base discount value for the price of almonds, this value will increase & decrease by 2% in the distribution
 discount = runif(min = base_discount - deviation_discount,
               max = base_discount + deviation_discount, 
@@ -54,9 +55,6 @@ parameters = cbind.data.frame(price, discount)
 # results = running the function profit() on the parameter distributions we created, and using the almond_anom df and 5 for acres
 # first remind R that the function needs to be sourced
 source(here("Profit.R"))
-
-#results = parameters %>% 
-#  pmap(~profit(df = almond_anom, acres = 5))
 
 results = parameters %>% pmap(profit, df = almond_anom, acres = 5)
 
@@ -87,7 +85,7 @@ ggplot(data = annual_profit_df, aes(x = discount, y = sum)) +
 ggplot(data = annual_profit_df, aes(x = discount, y = sum)) +
   geom_point() +
   theme_classic() +
-  ggtitle("Discount and Total Profit Anomaly for Almond Yield Anomalies\n1989-2010") +
+  ggtitle("Discount Rate and Total Profit Anomaly for Almond Yield Anomalies\n1989-2010") +
    xlab("Discount") + 
    ylab("Profit (US Dollars)") +
    theme(axis.title.x = element_text(color = "black", size = 11, face = "bold"),

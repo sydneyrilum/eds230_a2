@@ -5,8 +5,8 @@
 #'  
 #' @param almond_anom dataframe output from the almond_yield() function with column headers `year` and `almond_anomaly` (units = tons/acre)
 #' @param acres number of acres on almond farm 
-#' @param price cost of each unit of almond yield anomaly (units = US dollars/ton of almonds) (default = 2.00)
-#' @param discount discount rate (units = US dollars) (default = 0.12)
+#' @param price cost of each unit of almond yield anomaly (units = US dollars/ton of almonds, default = 2.00)
+#' @param discount discount rate (%, default = 0.12)
 #' 
 #' @return profit for almond yield anomalies summed across all years (units = US dollars)
 #' 
