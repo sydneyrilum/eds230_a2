@@ -1,7 +1,7 @@
 
 #' Profit Model for Almond Yield Anomaly
 #'  
-#'  This model computes the price anomaly for almond yields
+#' This model computes the total profit anomaly for almond yield anomalies for the range of years given
 #'  
 #' @param almond_anom dataframe output from the almond_yield() function with column headers `year` and `almond_anomaly` (units = tons/acre)
 #' @param acres number of acres on almond farm 
@@ -40,22 +40,7 @@ profit <- function(df, acres, price = 2.00, discount = 0.12) {
 
 
 
-# test function 
-# df = almond_anom
-# acres = 5
-# price = 2.00
-# discount = 0.12
-# 
-# year = (seq_along(df$year))
-# time = (year - year[1])
-# yield = (df$almond_anomaly)
-# 
-# # calculate value as a vector 
-# value = price*yield*acres
-# 
-# # net present value: account for discount rate with inflation
-# profit = value / (1 + discount)**time
-# 
+
 
 
 
