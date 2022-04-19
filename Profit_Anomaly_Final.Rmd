@@ -21,7 +21,7 @@ data <- read.table("clim.txt", sep = " ", header = T)
 
 # load in almond_anomaly.R function
 source(here("almond_anomaly.R"))
-source(here("Profit.R"))
+source(here("profit.R"))
 
 # calculate almond yield anomaly
 almond_anom <- almond_anomaly(data = data)
@@ -45,10 +45,10 @@ price = runif(min = base_price - deviation_price,
               n = n_samples)
 
 deviation_discount = 0.02 # 2% deviation in discount rate
-base_discount = 0.12 # the base discount value for the price of almonds, this value will increase & decrease by 2% in the distribution
+base_discount = 0.12 # the base discount value for the price of almonds, this value will increase & decrease by 2% in the sensitivity analysis distribution
 discount = runif(min = base_discount - deviation_discount,
-              max = base_discount + deviation_discount, 
-              n = n_samples)
+                 max = base_discount + deviation_discount, 
+                 n = n_samples)
 
 parameters = cbind.data.frame(price, discount)
 
@@ -56,7 +56,8 @@ parameters = cbind.data.frame(price, discount)
 # first remind R that the function needs to be sourced
 source(here("Profit.R"))
 
-results = parameters %>% pmap(profit, df = almond_anom, acres = 5)
+results = parameters %>% 
+  pmap(profit, df = almond_anom, acres = 5)
 
 results[[1]]
 
@@ -71,6 +72,7 @@ annual_profit_df = cbind.data.frame(annual_profit, parameters)
 ```
 
 ```{r}
+# exploratory plots
 ggplot(data = annual_profit_df, aes(x = price, y = sum)) +
   geom_point()
 
