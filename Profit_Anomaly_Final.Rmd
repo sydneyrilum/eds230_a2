@@ -41,15 +41,15 @@ profit[[1]]
 
 ```{r}
 # generate samples for both parameters
-n_samples = 220 # chose a number that is divisible by 11
+n_samples = 220 # chose a number that is divisible by 22
 
-deviation_price = 0.15 # 15% deviation, because this value is multiplied by base_price, resulting in a $0.30 deviation
+deviation_price = 0.15 # $0.15 deviation
 base_price = 2.00 # the base price value for almonds, this value will increase & decrease by 15% in the distribution
 price = runif(min = base_price - deviation_price,
               max = base_price + deviation_price, 
               n = n_samples)
 
-deviation_discount = 0.02 # 2% deviation, because this value is multiplied by base_discount, resulting in a $0.04 deviation
+deviation_discount = 0.02 # 2% discount rate
 base_discount = 0.12 # the base discount value for the price of almonds, this value will increase & decrease by 2% in the distribution
 discount = runif(min = base_discount - deviation_discount,
               max = base_discount + deviation_discount, 
@@ -104,7 +104,7 @@ ggplot(data = annual_profit_df, aes(x = discount, y = sum)) +
          panel.border = element_rect(colour = "black", fill = NA, size = 2)) +
   scale_y_continuous(breaks = seq(12000, 18000, by = 1000))
 
-#ggsave(filename = "discount_profit_plot.png", plot = last_plot(), path = here())
+ggsave(filename = "discount_profit_plot.jpeg", plot = last_plot(), path = here())
 ```
 
 
