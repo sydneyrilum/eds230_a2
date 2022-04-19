@@ -85,14 +85,14 @@ ggplot(data = annual_profit_df, aes(x = discount, y = sum)) +
 ggplot(data = annual_profit_df, aes(x = discount, y = sum)) +
   geom_point() +
   theme_classic() +
-  ggtitle("Discount Rate and Total Profit Anomaly for Almond Yield Anomalies\n1989-2010") +
-   xlab("Discount") + 
+  ggtitle("Discount Rate and Total Profit Anomaly \n for Almond Yield Anomalies 1989-2010") +
+   xlab("Discount Rate (Percent)") + 
    ylab("Profit (US Dollars)") +
    theme(axis.title.x = element_text(color = "black", size = 11, face = "bold"),
          axis.text.x = element_text(face = "bold", color = "black", size = 10),
          axis.title.y = element_text(color = "black", size = 11, face = "bold"),
          axis.text.y = element_text(face = "bold", color = "black", size = 10),
-         plot.title = element_text(color="black", size = 15, face = "bold"),
+         plot.title = element_text(color="black", size = 15, face = "bold", hjust = 0.5),
          panel.border = element_rect(colour = "black", fill = NA, size = 2)) +
   scale_y_continuous(breaks = seq(12000, 18000, by = 1000))
 
