@@ -21,20 +21,14 @@ data <- read.table("clim.txt", sep = " ", header = T)
 
 # load in almond_anomaly.R function
 source(here("almond_anomaly.R"))
-source(here("Juliet_profit.R"))
+source(here("Profit.R"))
 
 almond_anom <- almond_anomaly(data = data)
 #almond_anom
 
 profit <- profit(df = almond_anom, acres = 5)
-profit
-profit[[1]]
-# both profit and profit[[1]] return visually the same thing 
 
-# convert list of annual profit values into a df with the respective year
-#years = almond_anom$year
-#year_profit_df = cbind.data.frame(years, profit)
-#year_profit_df
+profit[[1]]
 ```
 
 #### Vary the parameters `price` and `discount`
